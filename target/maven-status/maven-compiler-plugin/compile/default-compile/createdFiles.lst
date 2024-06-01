@@ -1,0 +1,4 @@
+TgBot\Spring\Application.class
+TgBot\Spring\config\BotConfig.class
+TgBot\Spring\config\BotInitializer.class
+TgBot\Spring\service\TelegramBot.class
