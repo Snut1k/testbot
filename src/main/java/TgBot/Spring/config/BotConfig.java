@@ -6,8 +6,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
+@EnableScheduling // аннотация для автозапуска
 @PropertySource("application.properties")
 @Data // создает конструкторы для класса геттеры и сеттеры
 public class BotConfig {

@@ -1,12 +1,15 @@
 package TgBot.Spring.service;
 
 import TgBot.Spring.config.BotConfig;
+import TgBot.Spring.model.Ads;
+import TgBot.Spring.model.AdsRepository;
 import TgBot.Spring.model.User;
 import TgBot.Spring.model.UserRepository;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.grizzly.http.util.TimeStamp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -33,6 +36,8 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AdsRepository adsRepository;
     final BotConfig config;
 
     static final String HELP_TEXT = "This bot is for calculating health parameters\n\n"+
@@ -251,6 +256,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         super.onUpdatesReceived(updates);
     }
 
+    @Scheduled(cron = "${cron.scheduler}") // секнуды минуты часы дата мксяц день недели
+    private void setAds(){
+
+        var ads = adsRepository.findAll(); // тоже рефакторинг
+        var users = userRepository.findAll();
+        for(Ads ad: ads){
+            for (User user : users){
+                prepareAndSendMessage(user.getChatId(), ad.getAd());
+            }
+
+        }
+
+    }
 
 
     //WebHook -уведомляется по  сообщению  TelegramLongPollingBot - сам периобчиески проверяет есть ли сообщения
